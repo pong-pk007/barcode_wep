@@ -3,6 +3,24 @@ include './config/connection.php';
 if(isset($_POST['btn_action']))
 {
     
+    if($_POST['btn_action'] == 'Add')
+	{
+        $pd_code = $_POST["pd_code"];
+        $pd_name = $_POST["pd_name"];
+        $pd_stock = $_POST["pd_stock"];
+        $pd_qty = $_POST["pd_qty"];
+        
+		$query = "INSERT INTO `tbl_product` (`pd_id`, `pd_code`, `pd_name`, `pd_stock`, `pd_qty`, `date_update`) VALUES (NULL, '$pd_code', '$pd_name', '$pd_stock', '$pd_qty', CURRENT_TIMESTAMP)";
+		
+		$result = mysqli_query($conn, $query);
+		if(isset($result))
+		{
+			echo 'เพิ่มสินค้าเสร็จสิ้น';
+                }else{
+                    echo 'เพิ่มสินค้าไม่สำเร็จ!';
+                }
+	}
+    
     if($_POST['btn_action'] == 'fetch_single'){
         
         $pd_id = $_POST["product_id"];

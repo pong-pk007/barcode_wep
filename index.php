@@ -38,6 +38,10 @@ include './config/connection.php';
             <h2>กรุณากรอกรหัสสินค้า หรือ ยิงบาร์โค้ดจากตัวสินค้า</h2>
             <span id='alert_action'></span>
             <div class="row">
+                
+                <div class="col-lg-12" align='right'>
+                    <button type="button" name="add" id="add_button" class="btn btn-success btn-lg"><i class="fa fa-plus"></i>&nbsp;เพิ่มสินค้า</button>
+                </div>
 
                 <div id="search_area" class="form-group col-md-12">
                     <label class="control-label" for="txt_std_name">กรอกรหัสสินค้า</label>
@@ -164,6 +168,45 @@ include './config/connection.php';
             </div>
         </div>
         
+        
+        <div id="productAddModal" class="modal fade">
+            <div class="modal-dialog modal-lg">
+                <form method="post" id="add_product_form">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title"><i class="fa fa-plus"></i> เพิ่มข้อมูลสินค้าใหม่</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label>กรอกรหัสสินค้า</label>
+                                <input type="text" name="pd_code" id="pd_code" class="form-control" required />
+                            </div>
+                            <div class="form-group">
+                                <label>กรอกชื่อสินค้า</label>
+                                <input type="text" name="pd_name" id="pd_name" class="form-control" required />
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-lg-6">
+                                    <label>กรอกจำนวนสินค้า</label>
+                                    <input type="number" name="pd_stock" id="pd_stock" class="form-control" required />
+                                </div>
+                                <div class="form-group col-lg-6">
+                                    <label>กรอกหน่วยนับ</label>
+                                    <input type="text" name="pd_qty" id="pd_qty" class="form-control" required />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="hidden" name="btn_action" id="add_btn_action" />
+                            <button type="submit" name="add_action" id="add_action" class="btn btn-info" value="Add">บันทึก</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
 
         <!--my modal add edit zone-->
 <!--        <div  class="modal fade bs-example-modal-lg" id="modal_detail">
@@ -200,6 +243,35 @@ include './config/connection.php';
 
                 $('.open_detail').click(function () {
                     $("#modal_detail").modal('show');
+                });
+                
+                    $('#add_button').click(function(){
+                        $('#productAddModal').modal('show');
+                        $('#add_product_form')[0].reset();
+                        $('.modal-title').html("<i class='fa fa-plus'></i> เพิ่มสินค้าใหม่");
+                        $('#add_action').val("Add");
+                        $('#add_btn_action').val("Add");
+                    });
+                    
+                    $(document).on('submit', '#add_product_form', function(event){
+                    event.preventDefault();
+                    $('#add_action').attr('disabled', 'disabled');
+                    var form_data = $(this).serialize();
+                    $.ajax({
+                        url:"pd_action.php",
+                        method:"POST",
+                        data:form_data,
+                        success:function(data)
+                        {
+                            $('#add_product_form')[0].reset();
+                            $('#productAddModal').modal('hide');
+                            $('#alert_action').fadeIn().html('<div class="alert alert-success">'+data+'</div>');
+                            $('#add_action').attr('disabled', false);
+                            setTimeout(function (){
+                                location.reload();
+                            },1000);
+                        }
+                    })
                 });
                 
                 
