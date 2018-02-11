@@ -199,31 +199,32 @@ if (!isset($_SESSION["type"])) {
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title"><i class="fa fa-plus"></i> เพิ่มข้อมูลสินค้าใหม่</h4>
+                            <h4 class="modal-title_e"><i class="fa fa-plus"></i> เพิ่มข้อมูลสินค้าใหม่</h4>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
                                 <label>กรอกรหัสสินค้า</label>
-                                <input type="text" name="pd_code" id="pd_code" class="form-control" required />
+                                <input type="text" name="pd_code" id="pd_code_a" class="form-control" required />
                             </div>
                             <div class="form-group">
                                 <label>กรอกชื่อสินค้า</label>
-                                <input type="text" name="pd_name" id="pd_name" class="form-control" required />
+                                <input type="text" name="pd_name" id="pd_name_a" class="form-control" required />
                             </div>
                             <div class="row">
                                 <div class="form-group col-lg-6">
                                     <label>กรอกจำนวนสินค้า</label>
-                                    <input type="number" name="pd_stock" id="pd_stock" class="form-control" required />
+                                    <input type="number" name="pd_stock" id="pd_stock_a" class="form-control" required />
                                 </div>
                                 <div class="form-group col-lg-6">
                                     <label>กรอกหน่วยนับ</label>
-                                    <input type="text" name="pd_qty" id="pd_qty" class="form-control" required />
+                                    <input type="text" name="pd_qty" id="pd_qty_a" class="form-control" required />
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
+                            <input type="hidden" name="pd_id" id="pd_id_a" />
                             <input type="hidden" name="btn_action" id="add_btn_action" />
-                            <button type="submit" name="add_action" id="add_action" class="btn btn-info" value="Add">บันทึก</button>
+                            <button type="submit" name="add_action" id="add_action_a" class="btn btn-info" value="Add">บันทึก</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
                     </div>
@@ -273,14 +274,15 @@ if (!isset($_SESSION["type"])) {
                     $('#productAddModal').modal('show');
                     $('#add_product_form')[0].reset();
                     $('.modal-title').html("<i class='fa fa-plus'></i> เพิ่มสินค้าใหม่");
-                    $('#add_action').val("Add");
+                    $('#add_action_a').val("Add");
                     $('#add_btn_action').val("Add");
                 });
 
                 $(document).on('submit', '#add_product_form', function (event) {
                     event.preventDefault();
-                    $('#add_action').attr('disabled', 'disabled');
+                    $('#add_action_a').attr('disabled', 'disabled');
                     var form_data = $(this).serialize();
+                    console.log("data: "+form_data);
                     $.ajax({
                         url: "pd_action.php",
                         method: "POST",
@@ -290,10 +292,10 @@ if (!isset($_SESSION["type"])) {
                             $('#add_product_form')[0].reset();
                             $('#productAddModal').modal('hide');
                             $('#alert_action').fadeIn().html('<div class="alert alert-success">' + data + '</div>');
-                            $('#add_action').attr('disabled', false);
+                            $('#add_action_a').attr('disabled', false);
                             setTimeout(function () {
                                 location.reload();
-                            }, 1000);
+                            }, 2000);
                         }
                     })
                 });
@@ -355,6 +357,39 @@ if (!isset($_SESSION["type"])) {
                         }
                     })
                 });
+                
+                $(document).on('click', '.edit_pd', function () {
+                    var product_id = $(this).attr("id");
+                    var btn_action = 'fetch_single';
+                    $.ajax({
+                        url: "pd_action.php",
+                        method: "POST",
+                        data: {product_id: product_id, btn_action: btn_action},
+                        dataType: "json",
+                        success: function (data) {
+//                            console.log("data: " + JSON.stringify(data));
+                            for (i in data) {
+                                console.log(i + " : " + data[i]);
+                            }
+                            
+                            $('#pd_code_a').attr('disabled', 'disabled');
+                            $('#pd_stock_a').attr('disabled', 'disabled');
+                            $('#pd_code_a').val(data.pd_code);
+                            $('#pd_name_a').val(data.pd_name);
+                            $('#pd_stock_a').val(data.pd_stock);
+                            $('#pd_qty_a').val(data.pd_qty);
+                            $('#pd_id_a').val(data.pd_id);
+
+                            $('#productAddModal').modal('show');
+                            $('.modal-title_e').html("<i class='fa fa-pencil'></i> แก้ไขข้อมูลสินค้า");
+
+                            $('#pd_old_stock_m').val(data.pd_stock);
+                            $('#add_action_a').val("Edit_pd");
+                            $('#add_btn_action').val("Edit_pd");
+//                            $('#pd_id_m').val(data.pd_id);
+                        }
+                    })
+                });
 
 
                 $(document).on('submit', '#product_form_m', function (event) {
@@ -373,7 +408,7 @@ if (!isset($_SESSION["type"])) {
                             $('#action_m').attr('disabled', false);
                             setTimeout(function () {
                                 location.reload();
-                            }, 1000);
+                            }, 2000);
                         }
                     })
                 });
@@ -394,7 +429,7 @@ if (!isset($_SESSION["type"])) {
                             $('#action').attr('disabled', false);
                             setTimeout(function () {
                                 location.reload();
-                            }, 1000);
+                            }, 2000);
                         }
                     })
                 });

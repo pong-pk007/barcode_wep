@@ -15,7 +15,7 @@ if (isset($_POST["query"])) {
               <th>ชื่อสินค้า</th>
               <th>จำนวน</th>
               <th>หน่วยนับ</th>
-              <th colspan="2"><i class="fa fa-gear fa-fw"></i></th>
+              <th colspan="3"><i class="fa fa-gear fa-fw"></i></th>
              </tr>
   ';
     if (mysqli_num_rows($rs) > 0) {
@@ -37,6 +37,8 @@ if (isset($_POST["query"])) {
         <td>' . $row["pd_qty"] . '</td>
         <td><button type="button" name="plus" id="'.$row["pd_id"].'" class="btn btn-info btn-xs plus"><i class="fa fa-plus"><i/>&nbsp;เพิ่มจำนวน</button></td>
         <td><button type="button" name="minus" id="'.$row["pd_id"].'" class="btn btn-success btn-xs minus"><i class="fa fa-minus"><i/>&nbsp;ลดจำนวน</button></td>
+        <td><button type="button" name="edit_pd" id="'.$row["pd_id"].'" class="btn btn-primary btn-xs edit_pd"><i class="fa fa-pencil"><i/>&nbsp;แก้ไข</button></td>
+        
    </tr>
    ';
         }

@@ -10,7 +10,20 @@ if(isset($_POST['btn_action']))
         $pd_stock = $_POST["pd_stock"];
         $pd_qty = $_POST["pd_qty"];
         
-		$query = "INSERT INTO `tbl_product` (`pd_id`, `pd_code`, `pd_name`, `pd_stock`, `pd_qty`, `date_update`) VALUES (NULL, '$pd_code', '$pd_name', '$pd_stock', '$pd_qty', CURRENT_TIMESTAMP)";
+         $sql_chk = "SELECT * FROM `tbl_product` where pd_code = '$pd_code'";
+        $rs_chk = mysqli_query($conn, $sql_chk);
+        $numrow = mysqli_num_rows($rs_chk);
+        
+        if($numrow > 0){
+            echo 'รหัสสินค้านี้ถูกใช้งานแล้ว -> '. $numrow. 'ตัว กรุณาใช้รหัสอื่นที่ไม่ซ้ำกัน';
+            ?>
+        <script>
+                alert("รหัสสินค้านี้ ถูกใช้งานแล้วโปรดใช้รหัสอื่น");
+        </script>
+            <?php
+            
+        }else{
+                $query = "INSERT INTO `tbl_product` (`pd_id`, `pd_code`, `pd_name`, `pd_stock`, `pd_qty`, `date_update`) VALUES (NULL, '$pd_code', '$pd_name', '$pd_stock', '$pd_qty', CURRENT_TIMESTAMP)";
 		
 		$result = mysqli_query($conn, $query);
 		if(isset($result))
@@ -19,6 +32,9 @@ if(isset($_POST['btn_action']))
                 }else{
                     echo 'เพิ่มสินค้าไม่สำเร็จ!';
                 }
+        }
+        
+		
 	}
     
     if($_POST['btn_action'] == 'fetch_single'){
@@ -56,6 +72,23 @@ if(isset($_POST['btn_action']))
                 
 		if(isset($result)){
 			echo 'เพิ่มจำนวนสินค้าแล้วเป็น = '.$sum_stock;
+                }else{
+                    echo 'error!';
+                }
+	}
+        
+        if($_POST['btn_action'] == 'Edit_pd'){
+            
+            $pd_id = $_POST["pd_id"];
+            $pd_name = $_POST["pd_name"];
+            $pd_qty = $_POST["pd_qty"];
+            
+		$query = "UPDATE tbl_product SET tbl_product.pd_name = '$pd_name' , tbl_product.pd_qty = '$pd_qty' , tbl_product.date_update = CURRENT_TIMESTAMP() WHERE tbl_product.pd_id = $pd_id";
+                
+		$result = mysqli_query($conn, $query);
+                
+		if(isset($result)){
+			echo 'แก้ไขข้อมูลสินค้าเสร็จสิ้น!'. 'ชื่อสินค้า: ' . $pd_name . ', หน่วยนับ: ' . $pd_qty;
                 }else{
                     echo 'error!';
                 }
