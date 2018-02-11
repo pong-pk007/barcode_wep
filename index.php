@@ -1,12 +1,16 @@
 ﻿<?php
 include './config/connection.php';
+
+if (!isset($_SESSION["type"])) {
+    header("location:login.php");
+}
 ?>
 
 <html>
     <head>
         <meta charset="UTF-8"/>
         <meta http-equiv="refresh" content="1800">
-        <link rel="icon" href="./images/google_firebase.png" />
+        <link rel="icon" href="./images/icon_barcode_web.png" />
         <title>CSP INVENTORY</title>
         <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
         <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
@@ -22,15 +26,35 @@ include './config/connection.php';
     <body>
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
-                <div class="navbar-header">
-                    <!--                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
-                                            <span class="sr-only">Toggle navigation</span>
-                                            <span class="icon-bar"></span>
-                                            <span class="icon-bar"></span>
-                                            <span class="icon-bar"></span>
-                                        </button>-->
-                    <a class="navbar-brand" href="#">CSP INVENTORY</a>
+                <div class="navbar-header"> 
+                    <a class="navbar-brand" href="index.php">CSP INVENTORY</a>
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
                 </div>
+                  <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                      <li class="active">
+                          <a href="index.php">ค้นหาสินค้า และจัดการ<span class="sr-only">(current)</span></a>
+                      </li>
+                      <li><a href="user.php">ผู้ใช้งาน</a></li>
+                      
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                      <li><a href="#">Link</a></li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><?php echo $_SESSION["user_name"]; ?> <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="profile.php">โปรไฟล์</a></li>
+                          <li role="separator" class="divider"></li>
+                          <li><a href="logout.php">ออกจากระบบ</a></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </div>
             </div>
         </nav>
 
@@ -38,7 +62,7 @@ include './config/connection.php';
             <h2>กรุณากรอกรหัสสินค้า หรือ ยิงบาร์โค้ดจากตัวสินค้า</h2>
             <span id='alert_action'></span>
             <div class="row">
-                
+
                 <div class="col-lg-12" align='right'>
                     <button type="button" name="add" id="add_button" class="btn btn-success btn-lg"><i class="fa fa-plus"></i>&nbsp;เพิ่มสินค้า</button>
                 </div>
@@ -51,7 +75,7 @@ include './config/connection.php';
                 <div class="col-md-12">
                     <div id="std_data"></div>
                 </div>
-                
+
 
             </div>
 
@@ -97,8 +121,8 @@ include './config/connection.php';
 
                 });
         </script>
-        
-        
+
+
         <div id="productModal" class="modal fade">
             <div class="modal-dialog">
                 <form method="post" id="product_form">
@@ -108,14 +132,14 @@ include './config/connection.php';
                             <h4 class="modal-title"><i class="fa fa-plus"></i> เพิ่มจำนวนสินค้า</h4>
                         </div>
                         <div class="modal-body">  
-                            
+
                             <Div class="product_details" id="product_details"></Div>
                             <p id="pd_code"></p>
                             <p id="pd_name"></p>
                             <p id="pd_qty"></p>
                             <p id="pd_unit"></p>
                             <p id="last_update"></p>
-                            
+
                             <div class="form-group">
                                 <label>ระบุจำนวนที่ต้องการเพิ่ม</label>
                                 <input type="number" name="product_number" id="product_number" class="form-control" required />
@@ -132,8 +156,8 @@ include './config/connection.php';
                 </form>
             </div>
         </div>
-        
-        
+
+
         <div id="productModalMinus" class="modal fade">
             <div class="modal-dialog">
                 <form method="post" id="product_form_m">
@@ -143,14 +167,14 @@ include './config/connection.php';
                             <h4 class="modal-title"><i class="fa fa-minus"></i> ลดจำนวนสินค้า</h4>
                         </div>
                         <div class="modal-body">  
-                            
+
                             <Div class="product_details" id="product_details"></Div>
                             <p id="pd_code_m"></p>
                             <p id="pd_name_m"></p>
                             <p id="pd_qty_m"></p>
                             <p id="pd_unit_m"></p>
                             <p id="last_update_m"></p>
-                            
+
                             <div class="form-group">
                                 <label>ระบุจำนวนที่ต้องการลบ</label>
                                 <input type="number" name="product_number_m" id="product_number_m" class="form-control" required />
@@ -167,8 +191,8 @@ include './config/connection.php';
                 </form>
             </div>
         </div>
-        
-        
+
+
         <div id="productAddModal" class="modal fade">
             <div class="modal-dialog modal-lg">
                 <form method="post" id="add_product_form">
@@ -206,37 +230,37 @@ include './config/connection.php';
                 </form>
             </div>
         </div>
-        
+
 
         <!--my modal add edit zone-->
-<!--        <div  class="modal fade bs-example-modal-lg" id="modal_detail">
-            <div class="modal-dialog modal-lg" role="document">
-                <form name="frmMain" action="" method="POST">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                            <h4 class="modal-title" id="good_title">รายละเอียดความดี</h4>
-                        </div>
-                        <div class="modal-body">
-
-                            <h4 class="text-center">detail<br/><p id="gst_title"></p></h4>
-
-                            <div class="row">
-                                hgfdhghfg
-                                <input type="hidden" id="gst_id" name="gst_id" value=""/>
+        <!--        <div  class="modal fade bs-example-modal-lg" id="modal_detail">
+                    <div class="modal-dialog modal-lg" role="document">
+                        <form name="frmMain" action="" method="POST">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                    <h4 class="modal-title" id="good_title">รายละเอียดความดี</h4>
+                                </div>
+                                <div class="modal-body">
+        
+                                    <h4 class="text-center">detail<br/><p id="gst_title"></p></h4>
+        
+                                    <div class="row">
+                                        hgfdhghfg
+                                        <input type="hidden" id="gst_id" name="gst_id" value=""/>
+                                    </div>
+        
+                                </div>
+                                <div class="modal-footer">
+        
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
                             </div>
-
-                        </div>
-                        <div class="modal-footer">
-
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
+                        </form>
                     </div>
-                </form>
-            </div>
-        </div>-->
+                </div>-->
 
         <script>
             $(document).ready(function () {
@@ -244,55 +268,55 @@ include './config/connection.php';
                 $('.open_detail').click(function () {
                     $("#modal_detail").modal('show');
                 });
-                
-                    $('#add_button').click(function(){
-                        $('#productAddModal').modal('show');
-                        $('#add_product_form')[0].reset();
-                        $('.modal-title').html("<i class='fa fa-plus'></i> เพิ่มสินค้าใหม่");
-                        $('#add_action').val("Add");
-                        $('#add_btn_action').val("Add");
-                    });
-                    
-                    $(document).on('submit', '#add_product_form', function(event){
+
+                $('#add_button').click(function () {
+                    $('#productAddModal').modal('show');
+                    $('#add_product_form')[0].reset();
+                    $('.modal-title').html("<i class='fa fa-plus'></i> เพิ่มสินค้าใหม่");
+                    $('#add_action').val("Add");
+                    $('#add_btn_action').val("Add");
+                });
+
+                $(document).on('submit', '#add_product_form', function (event) {
                     event.preventDefault();
                     $('#add_action').attr('disabled', 'disabled');
                     var form_data = $(this).serialize();
                     $.ajax({
-                        url:"pd_action.php",
-                        method:"POST",
-                        data:form_data,
-                        success:function(data)
+                        url: "pd_action.php",
+                        method: "POST",
+                        data: form_data,
+                        success: function (data)
                         {
                             $('#add_product_form')[0].reset();
                             $('#productAddModal').modal('hide');
-                            $('#alert_action').fadeIn().html('<div class="alert alert-success">'+data+'</div>');
+                            $('#alert_action').fadeIn().html('<div class="alert alert-success">' + data + '</div>');
                             $('#add_action').attr('disabled', false);
-                            setTimeout(function (){
+                            setTimeout(function () {
                                 location.reload();
-                            },1000);
+                            }, 1000);
                         }
                     })
                 });
-                
-                
-                $(document).on('click', '.plus', function(){
+
+
+                $(document).on('click', '.plus', function () {
                     var product_id = $(this).attr("id");
                     var btn_action = 'fetch_single';
                     $.ajax({
-                        url:"pd_action.php",
-                        method:"POST",
-                        data:{product_id:product_id, btn_action:btn_action},
-                        dataType:"json",
-                        success:function(data){
+                        url: "pd_action.php",
+                        method: "POST",
+                        data: {product_id: product_id, btn_action: btn_action},
+                        dataType: "json",
+                        success: function (data) {
                             console.log("data: " + JSON.stringify(data));
                             $('#productModal').modal('show');
-                            $('#pd_name').text("ชื่อสินค้า: "+data.pd_name);
+                            $('#pd_name').text("ชื่อสินค้า: " + data.pd_name);
                             $('#pd_code').text("รหัสสินค้า: " + data.pd_code);
                             $('#pd_id').text(data.pd_id);
                             $('#pd_qty').text("จำนวนเดิม: " + data.pd_stock);
                             $('#pd_unit').text("หน่วยนับ: " + data.pd_qty);
                             $('#last_update').text("ปรับปรุงล่าสุดเมื่อ: " + data.last_update)
-                           
+
                             $('#pd_old_stock').val(data.pd_stock);
                             $('#action').val("Edit");
                             $('#btn_action').val("Edit");
@@ -300,30 +324,30 @@ include './config/connection.php';
                         }
                     })
                 });
-                
-                
-                $(document).on('click', '.minus', function(){
+
+
+                $(document).on('click', '.minus', function () {
                     var product_id = $(this).attr("id");
                     var btn_action = 'fetch_single';
                     $.ajax({
-                        url:"pd_action.php",
-                        method:"POST",
-                        data:{product_id:product_id, btn_action:btn_action},
-                        dataType:"json",
-                        success:function(data){
+                        url: "pd_action.php",
+                        method: "POST",
+                        data: {product_id: product_id, btn_action: btn_action},
+                        dataType: "json",
+                        success: function (data) {
 //                            console.log("data: " + JSON.stringify(data));
-                            for(i in data){
-                                console.log(i + " : " + data[i]); 
+                            for (i in data) {
+                                console.log(i + " : " + data[i]);
                             }
 
                             $('#productModalMinus').modal('show');
-                            $('#pd_name_m').text("ชื่อสินค้า: "+data.pd_name);
+                            $('#pd_name_m').text("ชื่อสินค้า: " + data.pd_name);
                             $('#pd_code_m').text("รหัสสินค้า: " + data.pd_code);
                             $('#pd_id_m').text(data.pd_id);
                             $('#pd_qty_m').text("จำนวนเดิม: " + data.pd_stock);
                             $('#pd_unit_m').text("หน่วยนับ: " + data.pd_qty);
                             $('#last_update_m').text("ปรับปรุงล่าสุดเมื่อ: " + data.last_update)
-                           
+
                             $('#pd_old_stock_m').val(data.pd_stock);
                             $('#action_m').val("Minus");
                             $('#btn_action_m').val("Minus");
@@ -331,52 +355,52 @@ include './config/connection.php';
                         }
                     })
                 });
-                
-                
-                $(document).on('submit', '#product_form_m', function(event){
+
+
+                $(document).on('submit', '#product_form_m', function (event) {
                     event.preventDefault();
                     $('#action_m').attr('disabled', 'disabled');
                     var form_data = $(this).serialize();
                     $.ajax({
-                        url:"pd_action.php",
-                        method:"POST",
-                        data:form_data,
-                        success:function(data)
+                        url: "pd_action.php",
+                        method: "POST",
+                        data: form_data,
+                        success: function (data)
                         {
                             $('#product_form_m')[0].reset();
                             $('#productModalMinus').modal('hide');
-                            $('#alert_action').fadeIn().html('<div class="alert alert-success">'+data+'</div>');
+                            $('#alert_action').fadeIn().html('<div class="alert alert-success">' + data + '</div>');
                             $('#action_m').attr('disabled', false);
-                            setTimeout(function (){
+                            setTimeout(function () {
                                 location.reload();
-                            },1000);
+                            }, 1000);
                         }
                     })
                 });
-                
-                $(document).on('submit', '#product_form', function(event){
+
+                $(document).on('submit', '#product_form', function (event) {
                     event.preventDefault();
                     $('#action').attr('disabled', 'disabled');
                     var form_data = $(this).serialize();
                     $.ajax({
-                        url:"pd_action.php",
-                        method:"POST",
-                        data:form_data,
-                        success:function(data)
+                        url: "pd_action.php",
+                        method: "POST",
+                        data: form_data,
+                        success: function (data)
                         {
                             $('#product_form')[0].reset();
                             $('#productModal').modal('hide');
-                            $('#alert_action').fadeIn().html('<div class="alert alert-success">'+data+'</div>');
+                            $('#alert_action').fadeIn().html('<div class="alert alert-success">' + data + '</div>');
                             $('#action').attr('disabled', false);
-                            setTimeout(function (){
+                            setTimeout(function () {
                                 location.reload();
-                            },1000);
+                            }, 1000);
                         }
                     })
                 });
-                
-                
-                
+
+
+
             });
         </script>
 
